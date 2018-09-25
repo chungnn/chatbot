@@ -3,6 +3,7 @@ const port = process.env.PORT || 3000; //added
 const app = express(); //added
 
 const sentence_feature = require('./sentence_feature'); //added
+const neural = require('./neural_iris'); //added
 
 // Routing for index.html
 app.use(express.static(__dirname + '/public')); //added
@@ -19,4 +20,14 @@ app.get('/hello', function (req, res) {
     sentence_feature.extract_feature(req.query.sentence, (feature) => {
 		res.send(JSON.stringify(feature));
 	});
+});
+
+app.get('/neural_train', function (req, res) {
+	neural.train();
+    res.send("neural_train");
+})
+
+app.get('/neural_predict', function (req, res) {
+	neural.predict();
+    res.send("neural_predict");
 })
