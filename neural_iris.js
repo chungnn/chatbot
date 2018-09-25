@@ -22,6 +22,8 @@ const testingData = tf.tensor2d(irisTesting.map(item => [
 	item.sepalLength, item.sepalWidth, item.petalLength, item.petalWidth
 ]));
 
+console.log(testingData);
+
 //build neural network
 const model = tf.sequential();
 model.add(tf.layers.dense({units: 5, activation: 'sigmoid', inputShape: [4]}));

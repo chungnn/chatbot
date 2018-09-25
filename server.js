@@ -4,6 +4,7 @@ const app = express(); //added
 
 const sentence_feature = require('./sentence_feature'); //added
 const neural = require('./neural_iris'); //added
+const neural_vietis = require('./neural_vietis'); //added
 
 // Routing for index.html
 app.use(express.static(__dirname + '/public')); //added
@@ -30,4 +31,14 @@ app.get('/neural_train', function (req, res) {
 app.get('/neural_predict', function (req, res) {
 	neural.predict();
     res.send("neural_predict");
+})
+
+app.get('/neural_vietis', function (req, res) {
+	neural_vietis.train();
+    res.send("neural_vietis");
+})
+
+app.get('/neural_vietis_predict', function (req, res) {
+	neural_vietis.predict(req.query.sentence);
+    res.send("neural_vietis");
 })
