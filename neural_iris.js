@@ -36,9 +36,9 @@ var train = function(){
 	model.fit(trainingData, outputData, {
 	  epochs: 100
 	}).then((history) => {
-		//console.log(history);
-		//model.predict(testingData).print();
+		console.log(history);
 		console.log("Train OK");
+		model.predict(testingData).print();
 	}, (err) => {
 		console.log("Train ERROR");
 		console.log(err);
@@ -48,7 +48,6 @@ var train = function(){
 var predict = function(){
 	model.predict(testingData).print();
 }
-
 module.exports.train = train;
 module.exports.predict = predict;
 
