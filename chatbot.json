@@ -1,0 +1,74 @@
+{
+    "intents" : [
+        {
+            "intent" : "#greeting",
+            "pattern" : ["Hi", "Hello", "Chào", "Hi there!"],
+            "response" : ["Hi", "Hello", "Chào bạn", "Hi there!"]
+        },
+        {
+            "intent" : "#vietis",
+            "pattern" : ["Giới thiệu cho tôi về VietIS", "VietIS là công ty như thế nào", "Giới thiệu đi", "Nói về VietIS cho tao xem"],
+            "response" : ["VietIS là công ty chuyên gia công phần mềm cho thị trường Nhật Bản có uy tín với một đội ngũ kỹ sư, chuyên gia và quản lý dự án nhiều năm kinh nghiệm, đã làm việc với nhiều khách hàng Nhật Bản lớn như Hitachi, NTTData, Panasonic, … VietIS hiện đang áp dụng quy trình phần mềm và các công cụ quản lý dự án hiện đại, theo tiêu chuẩn CMMI-3, ISO 27001. VietIS xây dựng một môi trường làm việc thân thiện, chuyên nghiệp, tạo cơ hội phát triển cho mọi cá nhân và tập thể."]
+        },
+        {
+            "intent" : "#quality",
+            "pattern" : ["bao nhiêu nhân viên", "Quy mô công ty như thế nào", "công ty bao nhiêu người"],
+            "response" : ["Quy mô công ty mình đang là 200 người", "Công ty hiện có 200 nhân viên và tiếp tục tuyển thêm nhé"]
+        },
+        {
+            "intent" : "#career",
+            "pattern" : ["công ty cần vị trí nào?", "đang tuyển việc nào", "đang tuyển việc gì", "công ty đang tuyển vị trí nào"],
+            "response" : ["Công ty mình đang cần tuyển LTV Android và ios. Bạn quan tâm đến công việc nào?"]
+        },
+        {
+            "intent" : "#android",
+            "pattern" : ["vị trí android như thế nào", "còn tuyển android không"],
+            "response" : ["mình cần tuyển 3 ltv android không cần kinh nghiệm :))"]
+        },
+        {
+            "intent" : "#ios",
+            "pattern" : ["vị trí ios như thế nào", "còn tuyển ios không"],
+            "response" : ["mình cần tuyển 3 ltv ios không cần kinh nghiệm :)) bla bla"]
+        },
+        {
+            "intent" : "#java",
+            "pattern" : ["vị trí java như thế nào", "còn tuyển java không"],
+            "response" : ["mình cần tuyển 3 ltv java không cần kinh nghiệm :))"]
+        },
+        {
+            "intent" : "#self",
+            "pattern" : ["giới thiệu bản thân đi", "bạn là ai?"],
+            "response" : ["mình là bot đây:))", "mình là Vietiser", "I'm Ironman", "I'm a device that can be instructed to carry out sequences of arithmetic or logical operations automatically via computer programming"]
+        },
+        {
+            "intent" : "#goodbye",
+            "pattern" : ["bye", "goodbye", "tạm biệt"],
+            "response" : ["bye", "tạm biệt", "hẹn gặp lại", "cám ơn bạn và hẹn gặp lại!"]
+        },
+        {
+            "intent" : "#thanks",
+            "pattern" : ["thanks", "thank you", "cám ơn", "cảm ơn", "bạn tốt quá"],
+            "response" : ["you're wellcome", "không có chi", "rất vui được giúp bạn"]
+        },
+        {
+            "intent" : "#joke",
+            "pattern" : [],
+            "response" : ["hehe"]
+        },
+        {
+            "intent" : "#compliment",
+            "pattern" : ["VietIS thật là tuyệt vời", "bot thật là đẹp", "bot thật là xinh", "bot thật là tốt bụng"],
+            "response" : ["thank you!", "chuyện, quá khen", "không dám đâu :))"]
+        },
+        {
+            "intent" : "#blame",
+            "pattern" : ["bot ngu", "thật là bực"],
+            "response" : ["...", "Sorry :("]
+        },
+        {
+            "intent" : "#else",
+            "pattern" : ["Cái gì thế", "làm như thế nào", "vì sao lại thế"],
+            "response" : ["Cái này cháu chịu :(, đi hỏi sếp đã..."]
+        }
+    ]
+}

@@ -1,77 +1,26 @@
 const sentence_feature = require('./sentence_feature'); //added
 const tf = require('@tensorflow/tfjs');
-const sentences = [
-	{sentence: "VietIS thật là tuyệt vời", intent: "#vietis"},
-	{sentence: "Giới thiệu cho tôi về VietIS", intent: "#vietis"},
-	{sentence: "VietIS là công ty như thế nào", intent: "#vietis"},
-	{sentence: "Giới thiệu đi", intent: "#vietis"},
-	{sentence: "Nói về VietIS cho tao xem", intent: "#vietis"},
-	{sentence: "Hi", intent: "#greeting"},
-	{sentence: "Hello", intent: "#greeting"},
-	{sentence: "Chào", intent: "#greeting"},
-	{sentence: "Hi there", intent: "#greeting"},
-	{sentence: "bạn là ai?", intent: "#self"},
-	{sentence: "giới thiệu bản thân đi?", intent: "#self"},
-	{sentence: "bao nhiêu nhân viên?", intent: "#quality"},
-	{sentence: "Quy mô công ty như thế nào?", intent: "#quality"},
-	{sentence: "công ty cần vị trí nào?", intent: "#career"},
-	{sentence: "đang tuyển việc nào?", intent: "#career"},
-	{sentence: "công ty đang tuyển vị trí nào?", intent: "#career"},
-	{sentence: "vị trí android như thế nào?", intent: "#android"},
-	{sentence: "còn tuyển android không?", intent: "#android"},
-	{sentence: "vị trí ios như thế nào?", intent: "#ios"},
-	{sentence: "còn tuyển ios không", intent: "#ios"},
-	{sentence: "vị trí java như thế nào?", intent: "#java"},
-	{sentence: "còn tuyển java không", intent: "#java"},
-	{sentence: "bye", intent: "#bye"},
-	{sentence: "goodbye", intent: "#bye"},
-	{sentence: "tạm biệt", intent: "#bye"},
-	{sentence: "Cái gì thế", intent: "#else"},
-	{sentence: "làm như thế nào", intent: "#else"},
-	{sentence: "con", intent: "#else"},
-	{sentence: "cò", intent: "#else"},
-	{sentence: "bé", intent: "#else"},
-	/*
-	{sentence: "bé", intent: "#else"},
-	{sentence: "cành tre", intent: "#else"},
-	{sentence: "không biết", intent: "#else"},
-	{sentence: "đi chơi", intent: "#else"},
-	{sentence: "vì sao", intent: "#else"},
-	{sentence: "khách quan", intent: "#else"},
-	{sentence: "cụ thể", intent: "#else"},
-	{sentence: "phát triển", intent: "#else"},
-	{sentence: "chính xác", intent: "#else"},
-	*/
-	{sentence: "ngôn từ", intent: "#else"},
-	{sentence: "buồn", intent: "#else"},
-	{sentence: "năm tháng trôi qua", intent: "#else"},
-	{sentence: "vì sao lại thế", intent: "#else"},
-	{sentence: "mạng này lởm rồi", intent: "#else"},
-	{sentence: "buồn ơi là buồn", intent: "#else"},
-	{sentence: "cánh cò", intent: "#else"}
-];
-
-const intentsList = [
-	'#vietis',
-	'#greeting',
-	'#quality',
-	'#android',
-	'#ios',
-	'#java',
-	'#career',
-	'#self',
-	'#bye',
-	'#else'
-];
-
-const replyFromIntent =  require("./replyData.json");
+const botData = require("./chatbot.json").intents;
+const sentences = [];
+botData.forEach((intent, index) => {
+	intent.pattern.forEach((item, index) => {
+		sentences.push({
+			sentence: item,
+			intent: intent.intent
+		});
+	});
+});
+const intentsList = [];
+botData.forEach((item, index) => {
+	intentsList.push(item.intent);
+});
 
 //build neural network
 const model = tf.sequential();
-model.add(tf.layers.dense({units: 20, activation: 'sigmoid', inputShape: [28]}));
-model.add(tf.layers.dense({units: 2, activation: 'sigmoid', inputShape: [20]}));
-model.add(tf.layers.dense({units: 10, activation: 'sigmoid'}));
-model.compile({optimizer: tf.train.adam(.06), loss: 'meanSquaredError'});
+model.add(tf.layers.dense({units: 30, activation: 'sigmoid', inputShape: [sentence_feature.feature_length]}));
+model.add(tf.layers.dense({units: 10, activation: 'sigmoid', inputShape: [30]}));
+model.add(tf.layers.dense({units: intentsList.length, activation: 'sigmoid'}));
+model.compile({optimizer: tf.train.adam(.01), loss: 'meanSquaredLogarithmicError'});
 
 var get_features = function(){
 	var features = [];
@@ -84,18 +33,13 @@ var get_features = function(){
 }
 
 var get_intents = function(){
-	return sentences.map((item => [
-		item.intent == "#vietis" ? 1 : 0,
-		item.intent == "#greeting" ? 1 : 0,
-		item.intent == "#quality" ? 1 : 0,
-		item.intent == "#android" ? 1 : 0,
-		item.intent == "#ios" ? 1 : 0,
-		item.intent == "#java" ? 1 : 0,
-		item.intent == "#career" ? 1 : 0,
-		item.intent == "#self" ? 1 : 0,
-		item.intent == "#bye" ? 1 : 0,
-		item.intent == "#else" ? 1 : 0
-	]));
+	return sentences.map((item => {
+		var intentOutput = [];
+		intentsList.forEach((intent, index) => {
+			intentOutput.push(item.intent == intent ? 1 : 0,);
+		});
+		return intentOutput;
+	}));
 }
 
 var train = function (){
@@ -107,10 +51,10 @@ var train = function (){
 	const trainingData = tf.tensor2d(features);
 	const outputData = tf.tensor2d(intents);
 	model.fit(trainingData, outputData, {
-	  epochs: 10000,
+	  epochs: 2000,
 	  callbacks: {
 		onEpochEnd: async (epoch, log) => {
-		 //console.log(`Epoch ${epoch}: loss = ${log.loss}`);
+		console.log(`Epoch ${epoch}: loss = ${log.loss}`);
 		}
 	  }
 	}).then((history) => {
@@ -127,7 +71,7 @@ var train = function (){
 		console.log(err);
 	});
 }
-var getIntent = function(tsOutput) {
+var getIntentFromOutput = function(tsOutput) {
 	var result;
 	tsOutput.forEach((item, index) => {
 		if (Math.round(item)) result = intentsList[index];
@@ -142,16 +86,21 @@ var predict = function(sentence){
 		var result = model.predict(tf.tensor2d([feature]));
 		var readable_output = result.dataSync();
 		result.print();
-		intent = getIntent(readable_output);
+		intent = getIntentFromOutput(readable_output);
 	});
 	return getSentenceFromIntent(intent);
 }
 
 var getSentenceFromIntent = function(intent) {
-	var data = replyFromIntent[intent];
+	var data;
+	botData.forEach((item, index) => {
+		if (intent == item.intent) {
+			data = item.response;
+			return;
+		}
+	});
 	return data[Math.floor(Math.random() * data.length)]
 }
 
 module.exports.train = train;
 module.exports.predict = predict;
-
