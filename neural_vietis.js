@@ -1,5 +1,6 @@
 const sentence_feature = require('./sentence_feature'); //added
 const tf = require('@tensorflow/tfjs');
+require('@tensorflow/tfjs-node');
 const botData = require("./chatbot.json").intents;
 const sentences = [];
 botData.forEach((intent, index) => {
@@ -61,6 +62,8 @@ var train = function (){
 		//console.log(history);
 		//model.predict(testingData).print();
 		console.log("Train OK");
+		model.save('file://./savedModel/chatbot_model.h5');
+		console.log("model saved");
 		//model.predict(tf.tensor2d([[0,0,0,1,1,0,0,0,0,1,1]])).print();
 		//sentence_feature.extract_feature("cái quái gì vậy", (feature) => {
 			//features.push(feature);
@@ -73,8 +76,12 @@ var train = function (){
 }
 var getIntentFromOutput = function(tsOutput) {
 	var result;
+	var tmp = 0;
 	tsOutput.forEach((item, index) => {
-		if (Math.round(item)) result = intentsList[index];
+		if (Math.round(item) && tmp < item) {
+			result = intentsList[index];
+			tmp = item;
+		}
 	});
 	if (!result) return '#else';
 	return result;
